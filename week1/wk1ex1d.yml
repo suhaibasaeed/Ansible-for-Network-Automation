@@ -1,0 +1,5 @@
+---
+
+# 1d. Duplicate dictionary created in the previous task but use compressed YAML.
+
+{'cisco1': {'host': 'cisco1.bt.com', 'username': 'admin', 'password': 'test', 'device_type': 'cisco_ios', 'use_session_log': true}}

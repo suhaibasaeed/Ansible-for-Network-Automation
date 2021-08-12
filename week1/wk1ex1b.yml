@@ -1,0 +1,5 @@
+---
+
+# 1b. Create a YAML file that is a five element list but compressed YAML format.
+
+['hello', 'bye']

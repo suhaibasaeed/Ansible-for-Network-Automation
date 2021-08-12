@@ -1,0 +1,14 @@
+---
+
+# 1c. Create YAML file that contains a dictionary representing a network device.
+# The highest level key should be the device name (for example, "rtr1").
+# The value corresponding to that key should be another dictionary.
+# This inner dictionary should have the following key-value pairs
+#  (host, username, password, device_type, use_session_log)
+
+cisco1:
+  host: cisco1.bt.com
+  username: admin
+  password: password
+  device_type: cisco_ios
+  use_session_log: true
