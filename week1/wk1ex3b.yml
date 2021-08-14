@@ -1,0 +1,8 @@
+---
+
+- name: Print output
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - ansible.builtin.debug:
+        var: ansible_host

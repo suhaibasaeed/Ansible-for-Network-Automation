@@ -1,0 +1,17 @@
+---
+
+- name: Print output
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - ansible.builtin.debug:
+        var: ansible_host
+
+- name: 2nd play - print vars
+  hosts: cisco
+  gather_facts: False
+  tasks:
+    - ansible.builtin.debug:
+        var: ansible_connection
+    - ansible.builtin.debug:
+        var: ansible_host
