@@ -1,0 +1,27 @@
+---
+
+# 1c. Create a directory called "group_vars" in the same directory as your Playbook.
+# Within this directory, create a file named "all.yml".
+# In this file, define a variable named "desired_eos_version" and set it to a value of "4.18.3".
+# Add another task to your Playbook to print out the value of this "desired_eos_version" variable.
+
+- name: Arista play
+  hosts: arista5
+  tasks:
+    - name: Print ansible_facts
+      debug:
+        var: ansible_facts
+    - name: Print all IPv4 addresses
+      debug:
+        var: ansible_facts.net_all_ipv4_addresses
+    # Exercise 1b
+    - name: Print network os
+      debug:
+        var: ansible_network_os
+    - name: print hostname
+      debug:
+        var: ansible_host
+    # Exercise 1c
+    - name: print desired eos from group vars
+      debug:
+        var: desired_eos_version

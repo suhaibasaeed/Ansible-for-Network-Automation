@@ -1,0 +1,29 @@
+---
+
+# 1d. In the same directory as your Playbook, create a YAML file called "my_vars.yml".
+# Within this file, create the same variable named "desired_eos_version" as in the previous exercise,
+# but with a different value. Load this variable from my_vars.yml by adding "vars_files: my_vars.yml" into your Playbook.
+# Re-run the Playbook to see what happens. Which "desired_eos_version" wins? Why?
+
+- name: Arista play
+  hosts: arista5
+  vars_files: my_vars.yml
+  tasks:
+    - name: Print ansible_facts
+      debug:
+        var: ansible_facts
+    - name: Print all IPv4 addresses
+      debug:
+        var: ansible_facts.net_all_ipv4_addresses
+    # Exercise 1b
+    - name: Print network os
+      debug:
+        var: ansible_network_os
+    - name: print hostname
+      debug:
+        var: ansible_host
+    # Exercise 1d - File beats group vars
+    - name: print desired eos
+      debug:
+        var: desired_eos_version
+    

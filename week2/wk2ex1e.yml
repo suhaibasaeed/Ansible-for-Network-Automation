@@ -1,0 +1,41 @@
+---
+
+# 1e. Add a task to your playbook to create a new variable using "set_fact".
+# Name this variable "device_hostname" and set the value of it equal to the "inventory_hostname" combined with the suffix ".lab.io".
+# In a final task, print the value of this variable.
+
+- name: Arista play
+  hosts: arista5
+  vars_files: my_vars.yml
+  tasks:
+
+    - name: Print ansible_facts
+      debug:
+        var: ansible_facts
+
+    - name: Print all IPv4 addresses
+      debug:
+        var: ansible_facts.net_all_ipv4_addresses
+
+    # Exercise 1b
+    - name: Print network os
+      debug:
+        var: ansible_network_os
+
+    - name: print hostname
+      debug:
+        var: ansible_host
+
+    # Exercise 1d - File beats group vars
+    - name: print desired eos
+      debug:
+        var: desired_eos_version
+    # Exercise 1e
+    - name: set_fact variable
+      set_fact:
+        device_hostname: arista5.lasthop.io
+
+    - name: print new variable
+      debug:
+        var: device_hostname
+    

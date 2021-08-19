@@ -1,0 +1,22 @@
+---
+
+# 1b. Add tasks to your Playbook to print out inventory information about arista5.
+# This should include both the "ansible_network_os" and the "ansible_host" variables.
+
+
+- name: Arista play
+  hosts: arista5
+  tasks:
+    - name: Print ansible_facts
+      debug:
+        var: ansible_facts
+    - name: Print all IPv4 addresses
+      debug:
+        var: ansible_facts.net_all_ipv4_addresses
+    # Exercise 1b
+    - name: Print network os
+      debug:
+        var: ansible_network_os
+    - name: print hostname
+      debug:
+        var: ansible_host

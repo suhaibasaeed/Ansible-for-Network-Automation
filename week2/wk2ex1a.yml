@@ -1,0 +1,15 @@
+---
+
+# 1a. Create a Playbook containing a Play that executes on the "arista5" host.
+# Ensure that "gather_facts". Create a task that uses "debug" module to print "ansible_facts" to stdout.
+# Create a subsequent task that prints just "ansible_facts.net_all_ipv4_addresses" to stdout.
+
+- name: Arista play
+  hosts: arista5
+  tasks:
+    - name: Print ansible_facts
+      debug:
+        var: ansible_facts
+    - name: Print all IPv4 addresses
+      debug:
+        var: ansible_facts.net_all_ipv4_addresses
