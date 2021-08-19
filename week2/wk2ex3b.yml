@@ -1,0 +1,20 @@
+# 3b. Modify the Playbook to run both "show version" and "show lldp neighbors".
+# Once again, "register" the result and print the output.
+
+- name: NXOS command 
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: gather output from show commands
+      cisco.nxos.nxos_command:
+        # Pass list of commands
+        commands:
+          - show version
+          - show lldp neighbors
+      # Put output into variable
+      register: show_cmds
+      
+    - name: print output of show_ver variable
+      debug:
+        var: show_cmds

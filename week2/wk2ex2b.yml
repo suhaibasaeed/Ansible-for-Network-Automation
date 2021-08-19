@@ -1,0 +1,13 @@
+# 2b. Create a "host_vars" directory, and a subdirectory named "cisco5" within it.
+# Inside this, "host_vars/cisco5", create a file named "bgp.yml".
+# Inside this file, create a variable named "bgp_asn" using a different ASN value. Re-run the Playbook.
+# You should observe that the host_vars "bgp_asn" has higher priority than the group_vars "bgp_asn" variable.
+
+- name: Print out bgp variable
+  hosts: cisco
+  gather_facts: False
+  tasks:
+
+    - name: print asn from host vars
+      debug:
+        var: bgp_asn

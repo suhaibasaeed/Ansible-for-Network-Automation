@@ -1,0 +1,18 @@
+# 3a. Create a Playbook that operates against the "nxos" group.
+# It should have a play that uses the "nxos_command" module to gather the output from "show version".
+# Register the result of this command to a variable and print the variable out in a second task.
+
+- name: NXOS command 
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: gather output from show version command
+      cisco.nxos.nxos_command:
+        commands: show version
+      # Put output into variable
+      register: show_ver
+      
+    - name: print output of show_ver variable
+      debug:
+        var: show_ver

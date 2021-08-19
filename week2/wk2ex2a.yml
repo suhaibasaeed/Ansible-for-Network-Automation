@@ -1,0 +1,14 @@
+# 2a. Create a new directory that includes a Playbook and a "group_vars" directory.
+# The group_vars directory should contain a "cisco" subdirectory.
+# Inside this "group_vars/cisco" subdirectory, create a file named "bgp.yml".
+# Inside this "bgp.yml" file create a variable for "bgp_asn" and assign it a value between 65000 and 65535.
+# Use the "debug" module to print a message to stdout.
+
+- name: Print out bgp variable
+  hosts: cisco
+  gather_facts: False
+  tasks:
+
+    - name: print asn
+      debug:
+        var: bgp_asn

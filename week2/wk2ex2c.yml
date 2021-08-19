@@ -1,0 +1,23 @@
+# 2c. Create the following subdirectories: cisco1, cisco2, cisco6 (inside the host_vars directory).
+# The "host_vars/cisco5" subdirectory should already exist.
+# Note, the directory names must exactly match the Ansible "inventory_hostname".
+# In each of these ciscoX directories create a file named "ip_addresses.yml".
+# Inside this file create "loopback0" variable with IPv4 address (for example, 1.1.1.1 for cisco1).
+
+# Inside the same ciscoX directory, create a second file named "bgp.yml".
+# In this file create a variable "bgp_router_id" and assign it a value of the "loopback0 
+# Remember the "{{ loopback0 }}" notation
+# The "cisco5" bgp.yml file should contain both the "bgp_asn" and the "bgp_router_id".
+
+# The above exercise demonstrates that you can store additional inventory variables in host_vars, and group_vars.
+# These subdirectories also allow you to divide your YAML into multiple files.
+# This can simplify inventory management.
+
+- name: Print out bgp variables
+  hosts: cisco
+  gather_facts: False
+  tasks:
+
+    - name: print asn and RID from host vars
+      debug:
+        msg: "The ASN for host {{ inventory_hostname }} is {{ bgp_asn }}, the RID is {{ bgp_router_id }}"
