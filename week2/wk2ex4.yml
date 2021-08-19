@@ -1,0 +1,29 @@
+---
+
+# 4a. Create a Playbook that clears the logging buffer on the cisco6 device.
+# The command to clear the logging buffer is: "clear logging".
+# This command will prompt for confirmation ("Clear logging buffer [confirm]").
+# Ensure that your task handles the confirmation appropriately.
+# Register and print the results of the task to stdout.
+# Remember that "prompt" takes a regular expression so you either need to simplify it
+# or backslash escape special regex characters
+
+- name: Cisco clear logging
+  hosts: cisco6
+  gather_facts: False
+  tasks:
+  
+    - name: Send clear logging to device
+      cisco.ios.ios_command:
+        commands:
+        - command: clear logging
+          # String we're looking for from device
+          prompt: confirm
+          # Send yes back to device
+          answer: "y"
+      # Put output into variable
+      register: log_output
+    
+    - name: print output
+      debug:
+        var: log_output
