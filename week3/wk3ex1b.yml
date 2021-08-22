@@ -1,13 +1,8 @@
 ---
 
-# 1a. Construct an Ansible playbook that contains a single play. The play should execute the following:
-
-# If the ansible_network_os is "eos" then "eos_command" should be used to retrieve "show ip arp"
-# If the ansible_network_os is "ios" then "ios_command" should be used to retrieve "show ip arp"
-# If the ansible_network_os is "junos" then "junos_command" should be used to retrieve "show arp" 
-# (notice slight command differences).
-# For each of the above, register the output into a unique variable for example, show_ip_arp_eos.
-# Print out the registered output only for the EOS devices.
+# 1b. Expand on your playbook that you created in exercise1a.
+# Add tags to your playbook so that you can execute only "eos", "ios", or "junos" section of your playbook
+# For example, if I provide the "eos" tag, then only the "eos" tasks should be run.
 
 - name: Ansible network facts for show ip arp
   hosts: cisco:arista:juniper
