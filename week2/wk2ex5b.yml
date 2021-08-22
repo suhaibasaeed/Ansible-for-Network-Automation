@@ -1,0 +1,20 @@
+---
+
+# 5b. By using "stdout_lines", access and print out the "fxp0.0" interface information.
+# You can potentially accomplish this by using the below pattern:
+# "{{ interfaces['stdout_lines'][0][21] }}"
+
+- name: juniper show int terse
+  hosts: juniper
+  gather_facts: False
+  tasks:
+  
+    - name: run sh int terse command
+      junipernetworks.junos.junos_command:
+        commands: show interfaces terse
+      register: interfaces
+    
+    - name: print fxp0.0 output
+      debug:
+        var: interfaces.stdout_lines[0][21]
+      # Put output of sh int terse fxp0.0 into intfs variable

@@ -1,0 +1,19 @@
+---
+#6a. Create a Playbook that executes a task against the arista group.
+# Using the "eos_command" module, execute "show ip arp" and register the output.
+# Print this registered output to stdout.
+
+- name: Arista show ip arp
+  hosts: arista
+  gather_facts: False
+  tasks:
+    
+    - name: Send sh ip arp to devices
+      arista.eos.eos_command:
+        commands:
+          - show ip arp
+      register: sh_arp
+
+    - name: print output
+      debug:
+        var: sh_arp
