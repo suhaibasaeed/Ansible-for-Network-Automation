@@ -1,0 +1,37 @@
+---
+
+# 1a. Construct an Ansible playbook that contains a single play. The play should execute the following:
+
+# If the ansible_network_os is "eos" then "eos_command" should be used to retrieve "show ip arp"
+# If the ansible_network_os is "ios" then "ios_command" should be used to retrieve "show ip arp"
+# If the ansible_network_os is "junos" then "junos_command" should be used to retrieve "show arp" 
+# (notice slight command differences).
+# For each of the above, register the output into a unique variable for example, show_ip_arp_eos.
+# Print out the registered output only for the EOS devices.
+
+- name: Ansible network facts for show ip arp
+  hosts: cisco:arista:juniper
+  tasks:
+  
+    - name: EOS show ip arp
+      arista.eos.eos_command:
+        commands: show ip arp
+      when: ansible_network_os == "eos"
+      register: show_ip_arp_eos
+    
+    - name: print EOS arp
+      ansible.builtin.debug:
+        var: show_ip_arp_eos
+      when: ansible_network_os == "eos"
+    
+    - name: IOS show ip arp
+      cisco.ios.ios_command:
+        commands: show ip arp
+      when: ansible_network_os == "ios"
+      register: show_ip_arp_ios
+    
+    - name: JUNOS show ip arp
+      junipernetworks.junos.junos_command:
+        commands: show arp
+      when: ansible_network_os == "junos"
+      register: show_ip_arp_ios
