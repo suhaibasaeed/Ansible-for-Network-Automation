@@ -1,0 +1,58 @@
+---
+
+# 3. Create a Playbook that executes against the cisco1 and cisco2 routers.
+# This playbook should execute "show lldp neighbors" using the ios_command module.
+# Register the output and extract "stdout_lines[0]" from this output.
+# This will be a list of the output lines.
+
+# Loop over these lines and find the LLDP entry that contains "twb-sf-hpsw1".
+# This line should be present on both cisco1 and cisco2.
+# Save this line containing "twb-sf-hpsw1" as a new variable named lldp_entry.
+
+# Using lldp_entry variable and split() method use set_fact to extract three items from the line:
+# remote_device, local_intf, remote_intf.
+# Print the following three variables to stdout: remote_device, local_intf, remote_intf
+
+- name: Cisco show lldp neighbors
+  hosts: cisco1:cisco2
+  gather_facts: False
+  tasks:
+    
+    - name: Send show lldp nei to devices
+      cisco.ios.ios_command:
+        commands: show lldp neighbors
+      register: sh_lldp
+    
+    - name: print output
+      ansible.builtin.debug:
+        var: sh_lldp.stdout_lines[0]
+      register: output
+
+    - name: loop through output and extract twb-sf-hpsw1
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      # Output is put into dictionary so quote key to get what we want
+      loop: "{{output['sh_lldp.stdout_lines[0]']}}"
+      # Only print when we want our line of output
+      register: lldp_entry
+      when: '"twb" in item'
+      
+    - name: Extract remote_device, local_intf and remote_intf
+      ansible.builtin.debug:
+        # Get out line of output from dictionary and spilt on whitespace to get list
+        msg: "{{lldp_entry['results'][5]['item'].split()}}"
+      register: line
+
+    - name: Setting facts
+      set_fact:
+        # Get variable from list using index notation
+        remote_device: "{{line.msg[0]}}"
+        local_intf: "{{line.msg[1]}}"
+        remote_intf: "{{line.msg[4]}}"
+    
+    - name: Print variables to console
+      ansible.builtin.debug:
+        msg: "Device {{ remote_device }} --> Local intf {{ local_intf }} --> Remote intf {{ remote_intf }}"
+
+
+      
