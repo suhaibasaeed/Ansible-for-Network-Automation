@@ -1,0 +1,32 @@
+---
+
+# 2. Create a Playbook that executes against the nxos1 switch.
+# This playbook should use a "loop" and the "nxos_command" module to execute "show vlan id" -
+# For each of the following four VLANs: 1, 2, 3, 4.
+# Register the output of this task to a variable named "vlans".
+
+# Retrieve the output of "show vlan id 4" from your registered "vlans" variable.
+# Use the debug module to print this output to stdout.
+# You will probably have to inspect this "vlans" variable - 
+# To see how the multiple iterations of the loop affect the returned data structure.
+
+- name: NXOS VLAN
+  hosts: nxos1
+  gather_facts: False
+  tasks:
+        
+    - name: Show vlan ID loop
+      cisco.nxos.nxos_command:
+      # If we use quotes on variable the command fails on device
+        commands: show vlan id {{item}}
+      loop:
+        - 1
+        - 2
+        - 3
+        - 4
+      register: vlans
+
+    - name: print output
+      ansible.builtin.debug:
+        var: vlans
+
