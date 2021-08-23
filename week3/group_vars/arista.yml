@@ -1,0 +1,10 @@
+interface_vlan:
+  Ethernet1:
+  Ethernet2: 2
+  Ethernet3: 3
+  Ethernet4: 4
+  Ethernet5: 5
+  Ethernet6: 6
+  Ethernet7: 7
+  
+  

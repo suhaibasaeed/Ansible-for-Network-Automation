@@ -1,0 +1,19 @@
+---
+
+# 4. Using a single Jinja2 template and an Ansible Playbook generate a config
+# It should matching for each of the four Arista switches
+
+# The four Arista switch configurations should be identical to each other.
+# Except the hostname and the VLAN1 IP address will change.
+# Your output filenames should be stored in a separate directory
+# It should be named "{{ inventory_hostname }}.txt" (for example, ./CFGS/arista5.txt).
+
+- name: Arista device config template
+  hosts: arista
+  gather_facts: False
+  tasks:
+    
+    - name: Render template
+      ansible.builtin.template:
+        src: arista.j2
+        dest: "./CFGS/{{ inventory_hostname }}-config.txt"
