@@ -1,0 +1,2 @@
+bgp_asn: 22
+bgp_peer_ip: 172.31.254.1

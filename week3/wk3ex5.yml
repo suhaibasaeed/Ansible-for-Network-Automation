@@ -1,0 +1,19 @@
+---
+
+# 5. Use Jinja2 templating and an Ansible playbook to generate the following interface and BGP configurations
+# This will be for nxos1 and nxos2
+
+- name: Generate NXOS configurations
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Render interface template
+      ansible.builtin.template:
+        src: nxos_int.j2
+        dest: "./CFGS/{{ inventory_hostname }}-interface.txt"
+    
+    - name: Render interface template
+      ansible.builtin.template:
+        src: nxos_bgp.j2
+        dest: "./CFGS/{{ inventory_hostname }}-bgp.txt"
