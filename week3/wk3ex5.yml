@@ -13,7 +13,7 @@
         src: nxos_int.j2
         dest: "./CFGS/{{ inventory_hostname }}-interface.txt"
     
-    - name: Render interface template
+    - name: Render bgp template
       ansible.builtin.template:
         src: nxos_bgp.j2
         dest: "./CFGS/{{ inventory_hostname }}-bgp.txt"
