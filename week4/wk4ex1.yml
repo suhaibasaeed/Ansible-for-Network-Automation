@@ -1,0 +1,29 @@
+---
+
+# 1. Configure a custom login banner on the four Cisco IOS/IOS-XE devices using the ios_banner module.
+# Use a "write mem" handler to automatically save the configuration.
+# This "write mem" handler should only execute if configuration changes were made.
+
+- name: Cisco custom login banner 
+  gather_facts: False
+  hosts: cisco
+  tasks:
+
+  - name: Configue login banner
+    cisco.ios.ios_banner:
+      banner: login
+      text: |
+        ***************************************
+        Cisco IOS banner configured via Ansible
+
+        SAS takeover...
+        ***************************************
+      state: present
+    notify: write mem
+
+  handlers:
+    - name: write mem
+      cisco.ios.ios_command:
+        commands: write mem
+      changed_when: True
+  

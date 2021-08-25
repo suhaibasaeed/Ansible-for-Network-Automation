@@ -1,0 +1,20 @@
+---
+
+# 2. Use the ios_system module to configure the domain-name, hostname, and two name-servers on cisco1.
+# The new hostname should be "cisco1-tmp" and should be stored in host_vars.
+# The domain-name should be "bogus.com" and the name-servers should be "8.8.8.8" and "8.8.4.4".
+# Both the domain-name and the name-servers should be stored in group_vars/all.yml.
+# This playbook should be idempotent.
+
+- name: Configure DNS name, hostname and DNS servers on Cisco1
+  hosts: cisco1
+  gather_facts: False
+  tasks:
+
+    - name: Configure DNS info and hostname
+      cisco.ios.ios_system:
+        # Pass in info as variables from group and host vars
+        domain_name: "{{domainname}}"
+        hostname: "{{hostname}}"
+        name_servers: "{{nameservers}}"
+        state: present
