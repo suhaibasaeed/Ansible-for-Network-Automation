@@ -1,0 +1,49 @@
+---
+
+- name: Configure NXOS intf as L2 and trunk
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Configure interface as L2 port
+      cisco.nxos.nxos_interfaces:
+        config:
+          # Get variables from group vars
+          - name: "{{intf_name}}"
+            mode: "{{intf_mode}}"
+        state: merged
+    
+    - name: Configure trunk
+      # Use deprecated module due to issue
+      cisco.nxos.nxos_l2_interface:
+        name: "{{intf_name}}"
+        mode: trunk
+        state: present
+
+    - name: Configure native VLAN
+      # Use new resource module this time
+      cisco.nxos.nxos_l2_interfaces:
+        config:
+          - name: "{{intf_name}}"
+            trunk:
+              native_vlan: 4
+        state: merged
+
+    - name: Verification show int trunk command
+      cisco.nxos.nxos_command:
+        commands: show interface {{ intf_name }} trunk | json
+      register: show_int
+    
+    - name: Assert trunk and native vlan
+      ansible.builtin.assert:
+        that:
+          # Parse through dictionary to ensure we have both trunk and correct native vlan
+          - show_int["stdout"][0]["TABLE_interface"]["ROW_interface"]["status"] == "trunking"
+          - show_int["stdout"][0]["TABLE_interface"]["ROW_interface"]["native"] == "4"
+        success_msg: Both trunk and native VLAN are successfully configured
+      
+      
+        
+
+
+        
