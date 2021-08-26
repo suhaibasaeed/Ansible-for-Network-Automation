@@ -1,0 +1,35 @@
+# 3. Use the nxos_l3_interfaces resource module to configure an IP on Ethernet1/4 on both NX-OS switches.
+# The interface name (Ethernet1/4), the IP address, and the netmask should be stored in host_vars.
+# You should be using the "merged" state for this operation.
+# If "Ethernet1/4" is being used by another student, then you can use either "Ethernet1/3" or "Ethernet1/2".
+# For IP network, choose a random /24 network from the 10.227.X.X range.
+# Use 10.227.X.1 for nxos1 and 10.227.X.2 for nxos2.
+
+# After configuring the interfaces, use the net_ping module to verify IP connectivity between the two NX-OS switches.
+# Using an assert statement(s) in your playbook, verify the ping worked correctly 
+# (>=80% of the ping responses should be returned).
+
+- name: Configure NXOS interface
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Configure IP address on Eth1/4
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: "{{int_name}}"
+            ipv4: 
+              - address: "{{ip_addr}}/{{netmask}}"
+        state: merged
+
+    - name: Ping newly configured interface
+      ansible.netcommon.net_ping:
+        dest: "{{ip_addr}}"
+      register: ping_test
+
+    - name: Assert ping was successful
+      ansible.builtin.assert:
+        that:
+          # Extract received pings value and see if >90% were sucessfull
+          - ping_test.packets_rx / 5 >= 0.8
+        success_msg: ">80% of ping were succesfully returned"
