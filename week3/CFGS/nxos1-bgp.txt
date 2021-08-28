@@ -1,6 +1,6 @@
 feature bgp
 router bgp 22
-  router-id 172.31.101.102
+  router-id 172.31.101.101
   address-family ipv4 unicast
     network 172.31.101.101/32
     network 172.31.102.101/32

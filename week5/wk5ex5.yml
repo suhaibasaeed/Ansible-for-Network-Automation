@@ -1,0 +1,32 @@
+---
+
+# 5. Using an SSH key for authentication, execute the "show users" command on both cisco1 and cisco2.
+# You should use the ios_command module to accomplish this.#
+# Remember for this exercise that you will need to use the SSH key located here:
+# ansible_ssh_private_key_file="~/.ssh/student_key"
+
+# Additionally, you will need to switch the "ansible_user" to "student1".
+
+# Using the "assert" module, verify that "student1" is present in the output of "show users".
+# This will help verify that you are properly using the SSH key
+# and not accidentally connecting using the "pyclass" username/password.
+
+- name: IOS command using SSH key
+  hosts: cisco1:cisco2
+  gather_facts: False
+  tasks:
+
+    - name: Show users command
+      cisco.ios.ios_command:
+        commands: show users
+      register: sh_users
+    
+    - name: test
+      debug:
+        var: sh_users.stdout_lines[0][1]
+
+    - name: Assert student1 user logged in via SSH key
+      ansible.builtin.assert:
+        that:
+          - "'student1' in sh_users.stdout_lines[0][1]"
+        success_msg: Both devices were logged onto via SSH keys

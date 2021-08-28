@@ -1,6 +1,6 @@
 feature bgp
 router bgp {{ bgp_asn }}
-  router-id 172.31.101.102
+  router-id {{ loopback101_ip_address }}
   address-family ipv4 unicast
     network {{ loopback101_ip_address }}{{ loopback101_netmask }}
     network {{ loopback102_ip_address }}{{ loopback102_netmask }}
