@@ -1,0 +1,32 @@
+---
+
+# 4. Using the configurations generated from wk3ex5
+# Configure both BGP and the relevant interfaces on both nxos1 and nxos2.
+
+# Verify the BGP session reached the established using the nxos_command module.
+# For this verification task, you can simply execute "show ip bgp summary" using nxos_command
+# Also visually verify its output using the "debug" module.
+
+- name: Configure BGP on NXOS
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Configure interfaces on NXOS
+      cisco.nxos.nxos_config:
+        src: "../week3/CFGS/{{inventory_hostname}}-interface.txt"
+    
+    - name: Configure BGP on NXOS
+      cisco.nxos.nxos_config:
+        src: "../week3/CFGS/{{inventory_hostname}}-bgp.txt"
+
+    - name: Verify BGP neighbourship
+      cisco.nxos.nxos_command:
+        commands: show ip bgp summary
+      register: sh_bgp
+      tags: verify
+
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_bgp.stdout_lines
+      tags: verify
