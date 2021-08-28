@@ -1,0 +1,45 @@
+---
+
+
+# 3a. Using the ios_config module and the configuration hierarchy arguments 
+# (for exampe: parents, before, match, replace)
+# Configure a ten-line access-list on the cisco5 and cisco6 devices.
+
+# Use the ios_command module to verify that the ACL is configured
+# (basically execute: "show access-list <ACL-NAME>" and then use the debug module to print out the ACL).
+
+# Your playbook should be idempotent.
+
+- name: IOS ACL
+  hosts: cisco5:cisco6
+  gather_facts: False
+  tasks:
+
+    - name: Configure ACL
+      cisco.ios.ios_config:
+        before: no ip access-list extended SAS-ANSIBLE
+        parents: ip access-list extended SAS-ANSIBLE
+        lines:
+          - permit ip host 10.2.1.1 any
+          - permit ip host 10.2.1.2 any
+          - permit ip host 10.2.1.3 any
+          - permit ip host 10.2.1.4 any
+          - permit ip host 10.2.1.5 any
+          - permit ip host 10.2.1.6 any
+          - permit ip host 10.2.1.7 any
+          - permit ip host 10.2.1.8 any
+          - permit ip host 10.2.1.9 any
+          - permit ip host 10.2.1.10 any
+        # Check for ACL being exact match 
+        match: exact
+        # Configure entire block and not single line if missing
+        replace: block
+    
+    - name: Verify configuration of ACL
+      cisco.ios.ios_command:
+        commands: show access-list SAS-ANSIBLE
+      register: sh_acl
+
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_acl
