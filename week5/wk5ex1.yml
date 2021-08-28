@@ -1,0 +1,76 @@
+---
+
+# 1. Configure the following items on all of the lab network devices
+# (4 x Cisco IOS/IOS-XE devices, 4 x Arista devices, 2 x NX-OS devices,
+# and 2 x Juniper vMX devices):
+
+# ntp_server1: 130.126.24.24
+# ntp_server2: 152.2.21.1
+# domain_name: bogus.com
+# dns_server1: 8.8.8.8
+# dns_server2: 8.8.4.4
+
+# The above variables should all be stored in group_vars or host_vars.
+
+# Your playbook should be idempotent for all the devices.
+# Additionally, you should use the ios_config, eos_config, nxos_config,
+# and junos_config modules to accomplish this task.
+
+- name: Configure NTP and DNS on all devices
+  hosts: arista:cisco:juniper:nxos
+  gather_facts: True
+  tasks:
+
+    - name: Config changes on NXOS group
+      cisco.nxos.nxos_config:
+        lines:
+          - "ip domain-name {{domain_name}}"
+          - "ip name-server {{dns_server1}} {{dns_server2}}"
+          - "ntp server {{ntp_server1}} use-vrf management"
+          - "ntp server {{ntp_server2}} use-vrf default"
+      when: ansible_network_os == "nxos"
+      tags: nxos
+
+    - name: Config changes on Arista group
+      arista.eos.eos_config:
+        lines:
+          - "ip name-server {{dns_server1}}"
+          - "ip name-server {{dns_server2}}"
+          - "ip domain-name {{domain_name}}"
+          - "ntp server {{ntp_server1}}"
+          - "ntp server {{ntp_server2}}"
+      when: ansible_network_os == "eos"
+      tags: eos
+
+    - name: Config changes on Juniper group
+      junipernetworks.junos.junos_config:
+        lines:
+          - "set system domain-name {{domain_name}}"
+          - "set system ntp server {{ntp_server1}}"
+          - "set system ntp server {{ntp_server2}}"
+          - "set system name-server {{dns_server1}}"
+          - "set system name-server {{dns_server2}}"
+      when: ansible_network_os == "junos"
+      tags: junos
+    
+    - name: Config changes on Cisco IOS devices
+      cisco.ios.ios_config:
+        lines:
+          - "ip name-server {{dns_server1}}"
+          - "ip name-server {{dns_server2}}"
+          - "ip domain name {{domain_name}}"
+          - "ntp server {{ntp_server1}}"
+          - "ntp server {{ntp_server2}}"
+      when: ansible_facts.net_iostype == "IOS"
+      tags: ios
+
+    - name: Config changes on Cisco IOS-XE devices
+      cisco.ios.ios_config:
+        lines:
+          - "ip name-server {{dns_server1}} {{dns_server2}}"
+          - "ip domain name {{domain_name}}"
+          - "ntp server {{ntp_server1}}"
+          - "ntp server {{ntp_server2}}"
+      when: ansible_facts.net_iostype == "IOS-XE"
+      tags: ios
+      

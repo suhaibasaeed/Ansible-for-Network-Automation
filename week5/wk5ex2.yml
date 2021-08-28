@@ -1,0 +1,18 @@
+---
+
+# 2. Repeat exercise1 except now use the "cli_config" module for all of the devices.
+
+# Once again your final playbook should be idempotent.
+
+# Note, I had to specify "ansible_connection: network_cli" for the Juniper vMXs
+# Due to the cli_config module requiring network_cli.
+
+- name: Configure NTP and DNS on all devices
+  hosts: arista:cisco:juniper:nxos
+  gather_facts: True
+  vars:
+    ansible_connection: network_cli
+  tasks:
+
+    - ansible.netcommon.cli_config:
+        config: "{{lookup('template', 'templates/{{ansible_network_os}}/global.j2')}}"
