@@ -1,0 +1,14 @@
+---
+
+# 1a. Create a playbook that runs against localhost.
+# In this playbook, create a task that uses "include_tasks" and loads in an external sub-tasks file named "subtask1.yml".
+# The task in the main playbook should have a loop that loops over four IP addresses.
+# The sub-tasks file should have a "debug" task that prints out the IP address.
+
+- name: Localhost play
+  hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: include_tasks with loop
+      ansible.builtin.include_tasks:
