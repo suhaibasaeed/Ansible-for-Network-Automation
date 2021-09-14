@@ -1,0 +1,19 @@
+---
+
+# 1b. Add the name of your sub-tasks file into "host_vars/localhost.yml".
+#  Convert your "include_tasks" statement in your main playbook to use the variable defined in host_vars.
+# The rest of the task and sub-task should remain the same (i.e. looping over four IP addresses and printing them out).
+
+- name: Localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+
+    - name: include_tasks with loop and var
+      ansible.builtin.include_tasks: "{{file}}"
+      loop:
+      - 192.168.1.1
+      - 192.168.1.2
+      - 192.168.1.3
+      - 192.168.1.4
+    

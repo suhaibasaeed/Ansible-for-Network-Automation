@@ -1,0 +1,3 @@
+- name: In subtask1.yml
+  ansible.builtin.debug:
+    var: item

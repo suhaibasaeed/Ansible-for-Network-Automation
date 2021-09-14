@@ -1,0 +1,18 @@
+---
+
+# 1c. Create a file named "subtask2.yml" that has three "debug" tasks.
+# These debug tasks should each print out slightly different messages.
+# Additionally, these three sub-tasks should each have their own "tag" associated with them.
+# Create a new main playbook that uses "include_tasks" to execute the tasks in "subtask2.yml". No loop is necessary in this exercise.
+# What happens if you execute your playbook and pass in one of the "tags" defined in "subtask2.yml".
+# Does the sub-task actually execute? Why not? At this point, it is assumed that the main playbook has no tags defined in it.
+
+- name: Localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+
+  - name: include subtask2.yml
+    ansible.builtin.include_tasks: subtask2.yml
+    # Tell Ansible to look in external file for tags also
+    tags: always

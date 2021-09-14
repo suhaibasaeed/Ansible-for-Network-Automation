@@ -1,0 +1,14 @@
+- name: In subtask2.yml - Print 1
+  ansible.builtin.debug:
+    msg: Hello 1
+  tags: task1
+
+- name: In subtask2.yml - Print 2
+  ansible.builtin.debug:
+    msg: Hello 2
+  tags: task2
+
+- name: In subtask2.yml - Print 3
+  ansible.builtin.debug:
+    msg: Hello 3
+  tags: task3
