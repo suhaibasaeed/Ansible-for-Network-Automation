@@ -1,0 +1,14 @@
+---
+
+# 6. Create an Ansible role that configures VRF-lite on the cisco5 and cisco6 devices
+# This same configuration should be deployed to both routers.
+# You should make variables out of the VRF names, route distinguishers, and VRF-interfaces
+# (i.e. the interface a given VRF is assigned to).
+# All the elements used to accomplish this configuration should be included in the role
+# i.e. (tasks, variables, templates).
+
+
+- name: VRF configuration play via role
+  hosts: cisco5:cisco6
+  roles:
+    - vrf

@@ -1,0 +1,9 @@
+{%- for i in vrfs %}
+
+ip vrf {{i.name}}
+ rd 65000:{{i.rd}}
+!
+interface {{i.interfaces}}
+ ip vrf forwarding {{i.name}}
+!
+{%- endfor %}

@@ -1,0 +1,9 @@
+vrfs:
+  - name: blue
+    rd: 1
+    interfaces: Loopback98
+  - name: red
+    rd: 2
+    interfaces: Loopback99
+
+    
