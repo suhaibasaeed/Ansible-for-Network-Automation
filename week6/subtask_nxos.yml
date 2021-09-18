@@ -1,0 +1,7 @@
+- name: Config changes on NXOS group
+  cisco.nxos.nxos_config:
+    lines:
+      - "ip domain-name lol.com"
+      - "ip name-server 8.8.8.8 4.2.2.2"
+      - "ntp server 1.2.3.4 use-vrf management"
+      - "ntp server 2.3.4.5 use-vrf default"

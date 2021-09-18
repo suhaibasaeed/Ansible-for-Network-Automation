@@ -1,0 +1,31 @@
+---
+
+# 4. Construct a playbook that executes against the Arista, Cisco IOS/IOS-XE, and Cisco NX-OS lab devices.
+# The playbook should consist of a single Ansible play.
+# The tasks for each platform should configure the global parameters (DNS servers, NTP servers, and domain-name).
+# The actual configuration tasks for each platform should be imported/included from an external task file per platform.
+
+- name: Configure DNS and NTP on all devices
+  hosts: arista:cisco:nxos
+  tasks: 
+
+    - name: In_tasks NXOS
+      ansible.builtin.import_tasks: subtask_nxos.yml
+      when: ansible_network_os == "nxos"
+      tags: nxos
+      
+    - name: Import_tasks Arista
+      ansible.builtin.import_tasks: subtask_arista.yml
+      when: ansible_network_os == "eos"
+      tags: arista
+    
+    - name: import_tasks for Cisco IOS
+      ansible.builtin.import_tasks: subtask_ios.yml
+      when: ansible_facts.net_iostype is defined and ansible_facts.net_iostype  == "IOS"
+      tags: ios
+    
+    - name: import_tasks for Cisco IOS-XE
+      ansible.builtin.import_tasks: subtask_iosxe.yml
+      when: ansible_facts.net_iostype is defined and ansible_facts.net_iostype  == "IOS-XE"
+      tags: iosxe
+      

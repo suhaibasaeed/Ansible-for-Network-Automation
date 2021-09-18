@@ -2,5 +2,5 @@
   cisco.ios.ios_config:
     lines:
       - "ip name-server 8.8.8.8"
-      - "ip domain name sas.com"
+      - "ip domain-name sas.com"
       - "ntp server 1.1.1.1"
