@@ -1,0 +1,6 @@
+- name: Config changes on Cisco IOS-XE devices
+  cisco.ios.ios_config:
+    lines:
+      - "ip name-server 4.2.2.2 8.8.8.8"
+      - "ip domain name lol.com"
+      - "ntp server 1.1.1.1"

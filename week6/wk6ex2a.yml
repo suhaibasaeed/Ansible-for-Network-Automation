@@ -1,0 +1,12 @@
+---
+
+# 2a. Convert exercise1a over to use "import_tasks" instead of "include_tasks".
+# Remember to relocate the loop for proper execution
+
+- name: Localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+
+    - name: import_tasks with loop inside
+      ansible.builtin.import_tasks: subtask1b.yml

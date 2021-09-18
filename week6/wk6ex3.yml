@@ -1,0 +1,18 @@
+---
+
+# 3. Use import_tasks and an Ansible conditional to load an external task file
+# It will configure the Cisco IOS devices for DNS, NTP, and for a domain-name.
+# Use 2nd import_tasks statement and a conditional to do same for Cisco IOS-XE devices.
+# Both configurations should use the "ios_config" module and should be idempotent.
+
+- name: Cisco IOS/XE play
+  hosts: cisco
+  tasks:
+
+    - name: import_tasks for Cisco IOS
+      ansible.builtin.import_tasks: subtask_ios.yml
+      when: ansible_facts.net_iostype == "IOS"
+    
+    - name: import_tasks for Cisco IOS-XE
+      ansible.builtin.import_tasks: subtask_iosxe.yml
+      when: ansible_facts.net_iostype == "IOS-XE"

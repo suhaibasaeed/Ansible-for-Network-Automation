@@ -1,0 +1,18 @@
+---
+
+# 2b. Try to convert exercise1b over to "import_tasks"
+# instead of "include_tasks" while using a variable from inventory.
+# Will you be able to do this? Why not?
+# How could you use a variable for the file name while still using "import_tasks"?
+# Hint, what are some other variable locations besides inventory
+# where you could define the sub-tasks file name?
+
+- name: localhost play
+  hosts: local
+  gather_facts: False
+  # We can't use inventory variables so define var here
+  vars:
+    file: subtask1b.yml
+  tasks: 
+  - name: import_tasks with variable
+    ansible.builtin.import_tasks: "{{file}}"
