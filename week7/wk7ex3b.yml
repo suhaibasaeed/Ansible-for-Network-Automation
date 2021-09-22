@@ -1,0 +1,33 @@
+---
+
+# 3b. Using the ntc-templates index file, and ntc_parse, retrieve the output of "show vlan" (as structured data)
+# From the four Arista devices.
+
+- name: Arista TextFSM play
+  hosts: arista
+  gather_facts: False
+  vars:
+    platform: "arista_eos"
+    command: "show vlan"
+    textfsm_index: "/home/ssaeed/ntc-templates/ntc_templates/templates/"
+  tasks:
+
+    - name: Execute command
+      arista.eos.eos_command:
+        commands: show vlan
+      register: sh_vlan 
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_vlan
+    
+    - name: Use ntc_parse filter to get structured output
+      set_fact:
+        show_vl: "{{sh_vlan.stdout[0] | ntc_parse(command, platform, textfsm_index)}}"
+    
+    - name: Print structured output
+      ansible.builtin.debug:
+        var: show_vl
+      
+      
+      

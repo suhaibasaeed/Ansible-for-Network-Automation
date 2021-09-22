@@ -1,0 +1,44 @@
+---
+
+# 5a. Execute "show lldp neighbors" on both of the NX-OS devices.
+# Use regular expressions and the regex_findall() filter to extract the following: remote_name, local_interface, remote_interface.
+# Print these three fields out the the screen using a data structure (a list or a dictionary for the outermost data structure).
+
+- name: NXOS play
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Get show lldp neighbors
+      cisco.nxos.nxos_command:
+        commands: show lldp neighbors
+      register: show_lldp
+
+    - name: Print
+      ansible.builtin.debug:
+        var: show_lldp
+    
+    - ansible.builtin.set_fact:
+        show_lldp: "{{ show_lldp.stdout[0] }}"
+
+    - name: Strip header information
+      ansible.builtin.set_fact:
+        sh_lldp: "{{ show_lldp | regex_replace('Device ID.*Port ID') | trim }}"
+    
+    - name: Strip header information
+      ansible.builtin.set_fact:
+        sh_lldp: "{{ sh_lldp | regex_replace('Capability codes:.*') | trim }}"
+      
+    - name: Print2
+      ansible.builtin.debug:
+        var: sh_lldp
+    
+    - name: Extract remote_name, local_interface and remote_interface
+      ansible.builtin.set_fact:
+        sh_lldp_list: "{{ sh_lldp | regex_findall('^(\\S+)\\s+(\\S+)\\s+\\S+\\s+\\S+\\s+(\\S+)', multiline=True) }}"
+    
+    - name: Print3
+      ansible.builtin.debug:
+        var: sh_lldp_list
+      
+      

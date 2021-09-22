@@ -32,5 +32,6 @@
       ansible.builtin.assert:
         that:
           - "'shut' and 'Idle' not in show_bgp[0].STATE_PFXRCD"
+          # String so change into integer
           - show_bgp[0].STATE_PFXRCD | int >= 2
         success_msg: All BGP tests have passed

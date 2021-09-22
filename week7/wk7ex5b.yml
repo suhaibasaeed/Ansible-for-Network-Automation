@@ -1,0 +1,26 @@
+---
+
+# 5b. Use regex_search and "show version" to extract the software version from each of the Arista devices.
+# Display this software version to standard output.
+# Note, you could also solve this problem on the Arista's using pipe JSON, but here the explicit purpose is to use RegEx.
+
+- name: Arista play
+  hosts: arista
+  gather_facts: False
+  tasks:
+
+    - name: Get show version output
+      arista.eos.eos_command:
+        commands: show version
+      register: show_ver
+
+    - name: Print
+      ansible.builtin.debug:
+        var: show_ver
+    
+    - ansible.builtin.set_fact:
+        show_ver: "{{ show_ver.stdout[0] }}"
+
+    - name: Print software version
+      ansible.builtin.debug:
+        msg: "The software version is {{ show_ver | regex_search('^Software image version:\\s+(\\S+)', '\\1', multiline=True) }}"

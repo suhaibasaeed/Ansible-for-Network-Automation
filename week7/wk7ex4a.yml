@@ -1,0 +1,28 @@
+# 4a. Using genie and the "clay584.genie" collection execute "show interface" on the two NX-OS switches.
+# Use the "parse_genie" filter to convert this output to structured data.
+
+# Print the returned data structure to standard out using "debug".
+# Verify that this data structure is in fact structured data (instead of a string).
+
+- name: NXOS Genie play
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Get show interface
+      cisco.nxos.nxos_command:
+        commands: show interface
+      register: show_int
+
+    - name: Print output
+      ansible.builtin.debug:
+        var: show_int
+    
+    - name: Parse data with Genie filter
+      ansible.builtin.set_fact:
+        sh_int: "{{ show_int.stdout[0] | clay584.genie.parse_genie(command='show interface', os='nxos') }}"
+    
+    - name:
+      ansible.builtin.debug:
+        var: sh_int
+      

@@ -1,0 +1,25 @@
+#4b. Repeat the same pattern as exercise4a except this time execute "show version".
+# From this output extract the software version and print it to the screen.
+
+- name: NXOS Genie play
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Get show version
+      cisco.nxos.nxos_command:
+        commands: show version
+      register: show_version
+
+    - name: Print output
+      ansible.builtin.debug:
+        var: show_version
+    
+    - name: Parse data with Genie filter
+      ansible.builtin.set_fact:
+        sh_ver: "{{ show_version.stdout[0] | clay584.genie.parse_genie(command='show version', os='nxos') }}"
+    
+    - name:
+      ansible.builtin.debug:
+        msg: "Software version: {{ sh_ver.platform.software.system_version}}"
+      
