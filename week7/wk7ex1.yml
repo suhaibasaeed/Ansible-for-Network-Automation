@@ -1,0 +1,38 @@
+---
+
+# 1. Using class5, exercise4 as a base solution, change this earlier exercise such that you do NOT hard-code the "bgp_peer_ip" in inventory.
+# In other words, in our earlier solution, we had something similar to the following embedded in our inventory:
+# $ cat host_vars/nxos1/bgp.yml 
+# bgp_peer_ip: 172.31.254.2
+# Consequently, we hard-coded the "nxos2" BGP peer IP address in our inventory for nxos1 (and vice versa).
+
+# In this new solution, convert over and use "hostvars" instead.
+# In other words, nxos1 should access the hostvars for "nxos2" and look up this BGP peer IP address which is defined in the nxos2 inventory (using hostvars).
+
+- name: Configure BGP on NXOS
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Configure interfaces on NXOS
+      cisco.nxos.nxos_config:
+        src: "../week3/CFGS/{{inventory_hostname}}-interface.txt"
+    
+    - name: set facts
+      set_fact:
+        bgp_peer_ip: "hostvars.{{inventory_hostname}}.eth1_4_ip_address}}"
+    
+    - name: Configure BGP on NXOS
+      cisco.nxos.nxos_config:
+        src: "../week3/CFGS/{{inventory_hostname}}-bgp.txt"
+
+    - name: Verify BGP neighbourship
+      cisco.nxos.nxos_command:
+        commands: show ip bgp summary
+      register: sh_bgp
+      tags: verify
+
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_bgp.stdout_lines
+      tags: verify

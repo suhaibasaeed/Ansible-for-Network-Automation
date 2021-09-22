@@ -1,0 +1,38 @@
+---
+
+# 2. Using a "block" and a "rescue" statement execute "eos_config" and configure two DNS servers.
+# For the block section, you should intentionally set an invalid password in the "eos_config" task such that your authentication will fail.
+# You might need to use a section similar to the following to accomplish this:
+
+# Then in the rescue section, you would need to set the password back to the correct value.
+# For this task, you should use an environment variable so you don't hard-code the lab password in the playbook.
+
+# The rescue section of the playbooks should properly configure the two DNS servers using "eos_config".
+# Consequently, the general pattern for this playbook will be the block section will fail authentication.
+# Then the rescue section will retry this operation and should succeed.
+
+- name: Arista play
+  hosts: arista
+  gather_facts: False
+  tasks:
+    - block:
+      - name: Attempt configuration using invalid password
+        vars:
+          ansible_ssh_pass: "invalid"
+        eos_config:
+          lines:
+            - "ip name-server 8.8.8.8"
+            - "ip name-server 4.2.2.2"
+      rescue:
+        - name: Attempt configuration with correct password
+          vars:
+          # Use environment variable to avoid hard-coded passwd
+            ansible_ssh_pass: "{{lookup('env','ANSIBLE_PASSWORD')}}"
+          eos_config:
+            lines:
+              - "ip name-server 8.8.8.8"
+              - "ip name-server 4.2.2.2"
+
+
+
+    

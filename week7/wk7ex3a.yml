@@ -1,0 +1,36 @@
+---
+
+# 3a. Exercise1 of this lesson should create a valid BGP session between nxos1 and nxos2.
+# Additionally, each router should be exchanging announcing two BGP prefixes.
+# Use the "show ip bgp summary" command, the nxos_command module, a TextFSM template
+# (the ntc-template, "cisco_nxos_show_ip_bgp_summary.template")
+# and Ansible's parse_cli_textfsm filter to extract structured BGP information.
+
+# From this structured data, add an ansible "assert" statement that checks for the following:
+# The "STATE_PFXRCD" field should not contain "Shut" (short for Shutdown).
+# The "STATE_PFXRCD" field should not contain "Idle" (BGP has been configured, but not transitioned to the established state).
+# The "STATE_PFXRCD" field should have at least two BGP prefixes.
+# This process will return an empty list if BGP has not been configured.
+
+- name: TextFSM play
+  hosts: nxos
+  gather_facts: False
+  vars:
+    tfsm_template: "cisco_nxos_show_ip_bgp_summary.textfsm"
+  tasks:
+
+    - name: Execute bgp summary command
+      cisco.nxos.nxos_command:
+        commands: show ip bgp summary
+      register: bgp_output
+    
+    - name: Extract structured data
+      ansible.builtin.set_fact:
+        show_bgp: "{{bgp_output.stdout[0] | parse_cli_textfsm(tfsm_template) }}"
+    
+    - name: Assertions
+      ansible.builtin.assert:
+        that:
+          - "'shut' and 'Idle' not in show_bgp[0].STATE_PFXRCD"
+          - show_bgp[0].STATE_PFXRCD | int >= 2
+        success_msg: All BGP tests have passed
