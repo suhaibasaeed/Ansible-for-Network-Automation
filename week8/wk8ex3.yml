@@ -1,0 +1,46 @@
+---
+
+# 3. On the four Arista switches create a playbook that retrieves the switching table using 'pipe json'
+# (i.e. 'show mac address-table | json').
+# From this output, convert the returned data structure to a dictionary.
+# This new dictionary should use the mac-addresses as the keys and the source interfaces as the values
+# (i.e. for a given mac-address the corresponding value should be the interface that this mac-address originated on).
+
+# You should accomplish this data structure conversion using 'map-attribute', 'zip', and then casting as a 'dict'.
+# For each Arista switch, print the resulting dictionary to standard output.
+
+- name: Arista play
+  hosts: arista
+  gather_facts: False
+  tasks:
+
+    - name: Get show mac JSON output
+      arista.eos.eos_command:
+        commands: show mac address-table | json
+      register: show_mac_json
+    
+    - name: Parse through json to get to entries
+      ansible.builtin.set_fact:
+        sh_mac: "{{ show_mac_json.stdout[0].unicastTable.tableEntries}}"  
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_mac
+    
+     - name: Create 2 equal length lists using map
+       ansible.builtin.debug:
+         mac_addr: "{{ show_mac_json.stdout[0].unicastTable.tableEntries | map(attribute='') | list }}"
+         src_int: "{{ show_mac_json | map(attribute='NEIGHBOR') | list }}"
+
+    # - name: Print2
+    #   ansible.builtin.debug:
+    #     var: local_int
+    
+    # - name: Use zip to create list of lists
+    #   ansible.builtin.set_fact:
+    #     zip_lst: "{{ local_int | zip(rem_device | list)}}"
+    
+    # - name: Create dict using combine and loop
+    #   ansible.builtin.set_fact:
+    #     lldp_dict: "{{ lldp_dict | default({}) | combine({item[0]: item[1]}) }}"
+    #   loop: "{{ zip_lst }}"
