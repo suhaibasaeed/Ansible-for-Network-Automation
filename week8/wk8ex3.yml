@@ -29,8 +29,8 @@
     
      - name: Create 2 equal length lists using map
        ansible.builtin.debug:
-         mac_addr: "{{ show_mac_json.stdout[0].unicastTable.tableEntries | map(attribute='') | list }}"
-         src_int: "{{ show_mac_json | map(attribute='NEIGHBOR') | list }}"
+         mac_addr: "{{ show_mac | map(attribute='') | list }}"
+         src_int: "{{ show_mac | map(attribute='NEIGHBOR') | list }}"
 
     # - name: Print2
     #   ansible.builtin.debug:
