@@ -1,0 +1,61 @@
+---
+
+# 1. Use TextFSM and the below ntc-template to retrieve "show lldp neighbors" from the two NX-OS switches:
+
+# cisco_nxos_show_lldp_neighbors.template
+
+# Convert the data structure returned via TextFSM from a list of lists to a dictionary.
+
+# The new dictionary format should be: the keys are the local interface name and the corresponding value is the remote device name.
+
+# Inside Ansible, you should use a loop and the "combine" filter to accomplish this task.
+# You should print your final data structure to the screen as part of your playbook.
+# Your final data structure should look similar to the following (this is only showing nxos1):
+    # "lldp_map": {
+    #     "Eth1/1": "nxos2.lasthop.io",
+    #     "Eth1/2": "nxos2.lasthop.io",
+    #     "Eth1/3": "nxos2.lasthop.io",
+    #     "Eth1/4": "nxos2.lasthop.io"
+    # }
+
+- name: NXOS play
+  hosts: nxos
+  gather_facts: False
+  vars:
+    tfsm_template: cisco_nxos_show_lldp_neighbors.textfsm
+  tasks:
+
+    - name: Execute show lldp command
+      cisco.nxos.nxos_command:
+        commands: show lldp neighbors
+      register: output
+
+    - name: TextFSM conversion
+      ansible.builtin.set_fact:
+        show_lldp: "{{ output.stdout[0] | parse_cli_textfsm(tfsm_template) }}"
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: show_lldp
+    
+    - name: Create equal length lists
+      ansible.builtin.set_fact:
+        local_int: "{{ show_lldp | map(attribute='LOCAL_INTERFACE') | list }}"
+        rem_device: "{{ show_lldp | map(attribute='NEIGHBOR') | list }}"
+
+    - name: Print2
+      ansible.builtin.debug:
+        var: local_int
+    
+    - name: Use zip to create list of lists
+      ansible.builtin.set_fact:
+        zip_lst: "{{ local_int | zip(rem_device | list)}}"
+    
+    - name: Create dict using combine and loop
+      ansible.builtin.set_fact:
+        lldp_dict: "{{ lldp_dict | default({}) | combine({item[0]: item[1]}) }}"
+      loop: "{{ zip_lst }}"
+    
+    - name: Print3
+      ansible.builtin.debug:
+        var: lldp_dict
