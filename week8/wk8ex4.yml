@@ -1,0 +1,32 @@
+---
+
+# 4. Using the four Arista switches and the same 'show mac address-table | json' command.
+# create a playbook that creates a list of all of the mac-addresses in the switching table (for each switch).
+# In order to do this, you should use list concatenation and a loop.
+
+- name: Arista play
+  hosts: arista
+  gather_facts: False
+  tasks:
+
+    - name: Get show mac JSON output
+      arista.eos.eos_command:
+        commands: show mac address-table | json
+      register: show_mac_json
+
+    - name: Parse through json to get to entries
+      ansible.builtin.set_fact:
+        sh_mac: "{{ show_mac_json.stdout[0].unicastTable.tableEntries}}"  
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: sh_mac
+    
+    - name: Create list of mac addresses using concatenation
+      ansible.builtin.set_fact:
+        mac_list: "{{ mac_list | default([]) + [item['macAddress']] }}"
+      loop: "{{ sh_mac }}"
+    
+    - name: Print2
+      ansible.builtin.debug:
+        var: mac_list
