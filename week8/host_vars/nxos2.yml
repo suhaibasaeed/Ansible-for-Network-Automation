@@ -1,0 +1,5 @@
+vlans:
+  - vlan_id: 200
+    name: blue200
+  - vlan_id: 201
+    name: blue201
