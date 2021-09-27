@@ -27,20 +27,23 @@
       ansible.builtin.debug:
         var: sh_mac
     
-     - name: Create 2 equal length lists using map
-       ansible.builtin.debug:
-         mac_addr: "{{ show_mac | map(attribute='') | list }}"
-         src_int: "{{ show_mac | map(attribute='NEIGHBOR') | list }}"
+    - name: Create 2 equal length lists using map
+      ansible.builtin.set_fact:
+        mac_addr: "{{ sh_mac | map(attribute='macAddress') | list }}"
+        src_int: "{{ sh_mac | map(attribute='interface') | list }}"
 
-    # - name: Print2
-    #   ansible.builtin.debug:
-    #     var: local_int
+    - name: Print2
+      ansible.builtin.debug:
+        var: mac_addr
     
-    # - name: Use zip to create list of lists
-    #   ansible.builtin.set_fact:
-    #     zip_lst: "{{ local_int | zip(rem_device | list)}}"
+    - name: Use zip to create list of lists
+      ansible.builtin.set_fact:
+        zip_lst: "{{ mac_addr | zip(src_int | list)}}"
     
-    # - name: Create dict using combine and loop
-    #   ansible.builtin.set_fact:
-    #     lldp_dict: "{{ lldp_dict | default({}) | combine({item[0]: item[1]}) }}"
-    #   loop: "{{ zip_lst }}"
+    - name: Create dict
+      ansible.builtin.set_fact:
+        mac_dict: "{{ dict(zip_lst) }}"
+
+    - name: Print3
+      ansible.builtin.debug:
+        var: mac_dict
