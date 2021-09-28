@@ -52,3 +52,18 @@
     - name: Print VLAN list
       debug:
         var: vlan_list
+
+    - name: Use intersection to find common VLANS
+      ansible.builtin.debug:
+        msg: "{{ vlan_list | intersect(hostvars['nxos2']['vlans']) }}"
+      when: inventory_hostname == 'nxos1'
+    # Exercise 5c
+    - name: Unique VLANs to NXOS1
+      ansible.builtin.debug:
+        msg: "{{ vlan_list | difference(hostvars['nxos2']['vlans']) }}"
+      when: inventory_hostname == 'nxos1'
+    # Exercise 5d
+    - name: Unique VLANs to NXOS2
+      ansible.builtin.debug:
+        msg: "{{ vlan_list | difference(hostvars['nxos1']['vlans']) }}"
+      when: inventory_hostname == 'nxos2'
