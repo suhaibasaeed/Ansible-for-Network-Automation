@@ -1,0 +1,21 @@
+---
+
+# 2. Use napalm_get_facts and the "get_lldp_neighbors()" method (filter: lldp_neighbors)
+# to retrieve the LLDP neighbors from all of the Arista and Cisco IOS/IOS-XE devices.
+
+# Reformat the retrieved data to print out the following table to standard output (in a somewhat readable way).
+# Note, you might need to use the "stdout_callback = debug" to accomplish this (i.e. to make the output somewhat readable):
+# ********* LLDP table for (cisco6) ********
+# GigabitEthernet2: cisco5
+# GigabitEthernet3: cisco5
+# GigabitEthernet4: cisco5
+# GigabitEthernet5: cisco5
+# GigabitEthernet6: cisco5
+# GigabitEthernet7: cisco5
+
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# The first entry should be the local interface and the second entry should be the remote peer that is visible via that interface.
+# You should clearly indicate which device the LLDP data was retrieved from.
+
+# You can loop through the data and use string concatenation to generate one large string (per device).
+# You will subsequently output this string to the screen.

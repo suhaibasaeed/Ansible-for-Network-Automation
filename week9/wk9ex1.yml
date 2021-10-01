@@ -1,0 +1,63 @@
+---
+
+# 1. Use "napalm_get_facts" and the get_config() method (filter: config) to retrieve the running configuration
+# from all of the devices in the lab environment. Save the running configurations using the following directory structure:
+# ./BUP/
+# ├── eos
+# │  ├── arista5.txt
+# │  ├── arista6.txt
+# │  ├── arista7.txt
+# │  └── arista8.txt
+# ├── ios
+# │  ├── cisco1.txt
+# │  ├── cisco2.txt
+# │  ├── cisco5.txt
+# │  └── cisco6.txt
+# ├── junos
+# │  ├── vmx1.txt
+# │  └── vmx2.txt
+# └── nxos
+#     ├── nxos1.txt
+#     └── nxos2.txt
+
+# Your playbook should automatically create the "BUP" sub-directory and the "BUP/{{ ansible_network_os }}" sub-directory
+# (if they do not exist). Use the Ansible "file" module to accomplish this.
+
+- name: Localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+
+    - name: Create BUP directory
+      ansible.builtin.file:
+        path: /home/ssaeed/suhaib_ansible/Ansible-for-Network-Automation/week9/BUP
+        state: directory
+        mode: '0755'
+
+- name: NAPALM play
+  hosts: arista:cisco:juniper:nxos
+  vars:
+    napalm_port:
+      eos: 443
+      ios: 22
+      nxos: 8443
+      junos: 830
+  tasks:
+
+    - name: Create Network OS sub directories
+      ansible.builtin.file:
+        path: '/home/ssaeed/suhaib_ansible/Ansible-for-Network-Automation/week9/BUP/{{ ansible_network_os }}'
+        state: directory
+        mode: '0755'
+    
+    - name: Retrieve running config
+      napalm.napalm.get_facts:
+        filter: config
+        optional_args:
+          port: "{{ napalm_port[ansible_network_os] }}"
+    
+    - name: Save config in respective folder
+      ansible.builtin.copy:
+        content: "{{ napalm_config.running }}"
+        dest: "BUP/{{ ansible_network_os }}/{{ inventory_hostname }}.txt"
+    
