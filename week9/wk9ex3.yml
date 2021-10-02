@@ -1,0 +1,9 @@
+---
+
+# 3. Use Jinja2 templating to generate the following VLAN and interface configurations:
+
+# All of the relevant VLAN IDs and VLAN names should be stored in group_vars.
+# All of the interface to VLAN assignment should also be stored in group_vars (i.e. which interface is assigned to which VLAN).
+
+# Use napalm-ansible and the "napalm_install_config" module (merge-operation) to deploy this configuration to the "arista5" switch.
+# Validate your configuration changes before committing them by generating and reviewing a "diff" file of the pending changes.

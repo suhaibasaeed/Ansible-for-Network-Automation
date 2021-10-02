@@ -19,3 +19,54 @@
 
 # You can loop through the data and use string concatenation to generate one large string (per device).
 # You will subsequently output this string to the screen.
+
+- name: NAPALM Cisco play
+  hosts: cisco:arista
+  vars:
+    napalm_port:
+      eos: 443
+      ios: 22  
+  tasks:
+
+    - name: Retrieve lldp nei
+      napalm.napalm.get_facts:
+        filter: lldp_neighbors
+        optional_args:
+          port: "{{ napalm_port[ansible_network_os] }}"
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: napalm_lldp_neighbors
+    
+    - name: Create list of local ints
+      ansible.builtin.set_fact:
+        intf_list: "{{ intf_list | default([]) + [item.key] }}"
+      with_dict: "{{ napalm_lldp_neighbors }}"
+    
+    - name: Print2
+      ansible.builtin.debug:
+        var: intf_list
+    
+    - name: Create list of remote Device names
+      ansible.builtin.set_fact:
+        rem_dev: "{{ rem_dev | default([]) + [item.value[0].hostname] }}"
+      with_dict: "{{ napalm_lldp_neighbors }}"
+
+    - name: Print2
+      ansible.builtin.debug:
+        var: rem_dev
+    
+    - name: Create list of lists using zip
+      ansible.builtin.set_fact:
+        lldp_list: "{{ intf_list | zip(rem_dev) | list }}"
+
+    - name: Create dict
+      ansible.builtin.set_fact:
+        lldp_dict: "{{ dict(lldp_list) }}"
+
+    - name: Print3
+      ansible.builtin.debug:
+        msg: |
+          "********* LLDP table for ({{inventory_hostname}}) ********" 
+          {{ lldp_dict | to_nice_json  }}
+          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
