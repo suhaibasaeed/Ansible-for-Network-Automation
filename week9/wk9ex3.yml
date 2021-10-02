@@ -7,3 +7,35 @@
 
 # Use napalm-ansible and the "napalm_install_config" module (merge-operation) to deploy this configuration to the "arista5" switch.
 # Validate your configuration changes before committing them by generating and reviewing a "diff" file of the pending changes.
+
+- name: Arista5 play
+  hosts: arista5
+  gather_facts: False
+  tasks:
+
+    - name: Render j2 VLAN template
+      ansible.builtin.template:
+        src: "templates/vlan.j2"
+        dest: "configs/vlan.txt"
+    
+    - name: Deploy vlan config to device
+      napalm.napalm.install_config:
+        # Merge operation
+        replace_config: False
+        commit_changes: True
+        config_file: "configs/vlan.txt"
+        diff_file: "diffs/{{ inventory_hostname }}.txt"
+    
+    - name: render intf j2 template
+      ansible.builtin.template:
+        src: "templates/interfaces.j2"
+        dest: "configs/interfaces.txt"
+
+    - name: Deploy intf config to device
+      napalm.napalm.install_config:
+        # Merge operation
+        replace_config: False
+        commit_changes: True
+        config_file: "configs/interfaces.txt"
+        diff_file: "diffs/{{ inventory_hostname }}2.txt"
+      

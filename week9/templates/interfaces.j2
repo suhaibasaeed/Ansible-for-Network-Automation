@@ -1,0 +1,5 @@
+{% for k, v in intfs.items() %}
+interface {{ k }}
+   switchport access vlan {{ v }}
+!
+{% endfor %}
