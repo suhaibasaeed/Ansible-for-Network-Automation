@@ -1,0 +1,20 @@
+interface Ethernet1/4
+  ip address {{ eth1_4_ip_address }}{{ eth1_4_netmask }}
+!
+interface loopback101
+  ip address {{ loopback101_ip_address }}{{ loopback101_netmask }}
+!
+interface loopback102
+  ip address {{ loopback102_ip_address }}{{ loopback102_netmask }}
+!
+feature bgp
+router bgp {{ bgp_asn }}
+  router-id {{ loopback101_ip_address }}
+  address-family ipv4 unicast
+    network {{ loopback101_ip_address }}{{ loopback101_netmask }}
+    network {{ loopback102_ip_address }}{{ loopback102_netmask }}
+  neighbor {{ bgp_peer_ip }}
+    remote-as 22
+    description configured by ansible
+    address-family ipv4 unicast
+!

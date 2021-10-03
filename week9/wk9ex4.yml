@@ -1,0 +1,62 @@
+---
+
+# 4. Repeat the BGP configuration exercise from class7, exercise1 using napalm-ansible.
+
+# Your updated solution should use "napalm_install_config" to install the configuration changes (merge operation).
+
+# Additionally, use "napalm_get_facts" and the "get_bgp_neighbors()" method (filter: bgp_neighbors) 
+# to verify that the BGP peers reach an established state ("is_up" key in the NAPALM returned data).
+# Additionally, verify each peer is receiving two prefixes.
+
+# You should use Ansible tags in your playbook to create three separate phases: build, deploy, and verify.
+# The build phase should handle all of the configuration generation.
+# The deploy phase should push the configuration to the devices.
+# The verify phase should ensure the BGP relationship reaches the correct state.
+
+# Use the NAPALM "nxos_ssh" driver to accomplish this exercise (add the argument "dev_os: nxos_ssh" to the NAPALM tasks).
+
+- name: Configure BGP on NXOS
+  hosts: nxos
+  gather_facts: False
+  tasks:
+
+    - name: Render BGP template
+      ansible.builtin.template:
+        src: "templates/nxos.j2"
+        dest: "configs/{{inventory_hostname}}.txt"
+      tags: build
+    
+    - name: Push config to devices using NAPALM
+      napalm.napalm.install_config:
+        replace_config: False
+        commit_changes: True
+        config_file: "configs/{{ inventory_hostname }}.txt"
+        dev_os: nxos_ssh
+      tags: deploy
+
+    - name: Verify BGP neighbourship
+      napalm.napalm.get_facts:
+        filter: bgp_neighbors
+        dev_os: nxos_ssh
+      tags: verify
+    
+    - name: Print
+      ansible.builtin.debug:
+        var: napalm_bgp_neighbors
+      tags: verify
+
+    - name: Assert for NXOS1
+      ansible.builtin.assert:
+        that: 
+          - napalm_bgp_neighbors["global"]["peers"]["172.31.254.2"]["is_up"] == True
+          - napalm_bgp_neighbors.global.peers["172.31.254.2"].address_family.ipv4.received_prefixes == 2
+      tags: verify
+      when: inventory_hostname == 'nxos1'
+
+    - name: Assert for NXOS2
+      ansible.builtin.assert:
+        that: 
+          - napalm_bgp_neighbors["global"]["peers"]["172.31.254.1"]["is_up"] == True
+          - napalm_bgp_neighbors.global.peers["172.31.254.1"].address_family.ipv4.received_prefixes == 2
+      tags: verify
+      when: inventory_hostname == 'nxos2'
