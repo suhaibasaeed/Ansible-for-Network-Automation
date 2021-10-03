@@ -1,0 +1,47 @@
+---
+
+# 5. Repeat the VLAN and interface configuration specified in exercise3 except using full configuration replace.
+
+# In order to accomplish this, you should use Ansible to retrieve the running configuration from Arista5.
+# You should use this running-configuration as the basis for your Jinja2 template.
+# Your Jinja2 template should use "include" statements to bring in both the interface configuration and the VLAN configuration
+# (from external templates).
+
+# Once again all of your new VLAN IDs and VLAN names should be stored in group_vars.
+# Similarly, the interfaces to VLAN ID mappings should also be stored in group_vars.
+
+# Note, do NOT change the Ethernet1 interface as this interface is needed for management access to the device.
+
+# At the end of the templating process, you should be generating an entire configuration that you can deploy to Arista5.
+
+# Next, use "napalm_install_config (replace) to deploy this configuration to the device.
+# Once again, verify your changes will work before you deploying them by generating a "diff" and reviewing it.
+
+# Your configuration changes should only modify the arista5 switch.
+
+- name: Arista5 play
+  hosts: arista5
+  gather_facts: False
+  tasks:
+
+    - name: Get running config from device
+      napalm.napalm.get_facts:
+        filter: config
+    
+    - name: Write config to file
+      ansible.builtin.copy:
+        content: "{{ napalm_config.running }}"
+        dest: "configs/{{inventory_hostname}}.txt"
+    
+    - name: Render template
+      ansible.builtin.template:
+        src: "templates/{{inventory_hostname}}.j2"
+        dest: "configs/{{inventory_hostname}}.txt"
+
+    - name: Deploy config to device via replace operation
+      napalm.napalm.install_config:
+        replace_config: True
+        commit_changes: True
+        config_file: "configs/{{ inventory_hostname }}.txt"
+        diff_file: "diffs/{{ inventory_hostname }}.txt"
+      tags: deploy
