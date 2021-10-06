@@ -1,0 +1,25 @@
+---
+
+# 1. Create three custom filter plugins named: filter1, filter2, and filter3.
+# The first filter plugin should convert a string to upper-case using Python's .upper() method.
+# The second filter plugin should convert a string to lower-case using Python's .lower() method.
+# The third filter plugin should use Python's .capitalize() method to capitalize the first letter of the string.
+
+# Construct an Ansible playbook that uses each of these three filters and verify that they each work properly.
+
+- name: localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+    # Filters are in filter1.py in filter_plugins directory
+    - name: Filter1
+      ansible.builtin.debug:
+        msg: "{{ 'hello world' | Filter1 }}"
+    
+    - name: Filter2
+      ansible.builtin.debug:
+        msg: "{{ 'HELLO world' | Filter2 }}"
+    
+    - name: Filter3
+      ansible.builtin.debug:
+        msg: "{{ 'hello world' | Filter3 }}"
