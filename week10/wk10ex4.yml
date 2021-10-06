@@ -1,0 +1,10 @@
+---
+
+# 4. Create an Ansible module that takes one argument named "my_string".
+# This argument is a string and is required.
+# The module should take the string and convert it to upper case and should return it the "output" field of the results.
+
+# Construct an Ansible playbook that uses this new module and verify that the module operates properly.
+# Inspect the output using "-vvv".
+# Ensure you see the "output" field and ensure that your original string has been converted to upper case.
+

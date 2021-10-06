@@ -15,11 +15,11 @@
         commands: show ip arp
       register: sh_arp
     
-    # Filters are in filter2.py in filter_plugins directory
+    
     - name: Print
       ansible.builtin.debug:
         var: sh_arp.stdout
-    
+    # Filters are in filter2.py in filter_plugins directory
     - name: ARP filter
       ansible.builtin.debug:
         msg: "{{ sh_arp.stdout[0] | aristaarp}}"
