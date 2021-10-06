@@ -8,3 +8,11 @@
 # Inspect the output using "-vvv".
 # Ensure you see the "output" field and ensure that your original string has been converted to upper case.
 
+- name: localhost play
+  hosts: local
+  gather_facts: False
+  tasks:
+    # Use custom module and pass in string to be converted to upper
+    - name: Custom module
+      custom_module1:
+        my_string: test
