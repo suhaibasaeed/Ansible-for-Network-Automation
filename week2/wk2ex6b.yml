@@ -1,7 +1,7 @@
 ---
-# 6a. Create a Playbook that executes a task against the arista group.
-# Using the "eos_command" module, execute "show ip arp" and register the output.
-# Print this registered output to stdout.
+# 6b. Add an additional set of tasks to use eos_command to execute "show ip arp | json".
+# Once again register this output and print it to standard output.
+# For the "show ip arp | json" output is a string returned or is structured data returned?
 
 - name: Arista show ip arp
   hosts: arista
@@ -15,7 +15,7 @@
       register: sh_arp
 
     - name: print output
-      debug:
+      ansible.builtin.debug:
         var: sh_arp
     
     - name: Get back sh arp in JSON
@@ -25,7 +25,7 @@
       register: arp_j
     
     - name: Print JSON output
-      debug:
+      ansible.builtin.debug:
         var: arp_j
       
        
