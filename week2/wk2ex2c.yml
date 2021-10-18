@@ -19,5 +19,5 @@
   tasks:
 
     - name: print asn and RID from host vars
-      debug:
+      ansible.builtin.debug:
         msg: "The ASN for host {{ inventory_hostname }} is {{ bgp_asn }}, the RID is {{ bgp_router_id }}"
