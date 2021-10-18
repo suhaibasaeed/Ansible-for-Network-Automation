@@ -1,6 +1,6 @@
 ---
 
-# 5a. Create another Playbook that operates against the juniper group.#
+# 5a. Create another Playbook that operates against the juniper group.
 # Using the "junos_command" module, run the "show interfaces terse" command.
 # Store the output of this in a variable named "interfaces".
 # Use the debug module to print this variable to stdout (to inspect it).
@@ -16,5 +16,5 @@
       register: interfaces
   
     - name: print output
-      debug:
+      ansible.builtin.debug:
         var: interfaces
