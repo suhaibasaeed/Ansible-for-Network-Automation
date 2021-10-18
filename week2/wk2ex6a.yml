@@ -15,5 +15,5 @@
       register: sh_arp
 
     - name: print output
-      debug:
+      ansible.builtin.debug:
         var: sh_arp
