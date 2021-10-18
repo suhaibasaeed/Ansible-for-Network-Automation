@@ -8,20 +8,25 @@
 - name: Arista play
   hosts: arista5
   tasks:
+    
     - name: Print ansible_facts
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts
+    
     - name: Print all IPv4 addresses
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts.net_all_ipv4_addresses
+    
     # Exercise 1b
     - name: Print network os
-      debug:
+      ansible.builtin.debug:
         var: ansible_network_os
+    
     - name: print hostname
-      debug:
+      ansible.builtin.debug:
         var: ansible_host
+    
     # Exercise 1c
     - name: print desired eos from group vars
-      debug:
+      ansible.builtin.debug:
         var: desired_eos_version
