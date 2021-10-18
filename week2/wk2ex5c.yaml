@@ -14,12 +14,12 @@
       register: interfaces
     
     - name: print fxp0.0 output
-      debug:
+      ansible.builtin.debug:
         var: interfaces.stdout_lines[0][21]
       # Put output of sh int terse fxp0.0 into intfs variable
       register: intfs
 
     - name: print only IP
-      debug:
+     ansible.builtin.debug:
         # Reference particular dictionary key and then split on whitespace and get IP as it is last element
         msg: "Primary IP: {{intfs['interfaces.stdout_lines[0][21]'].split()[-1]}}"
