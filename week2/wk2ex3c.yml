@@ -17,5 +17,5 @@
       register: show_cmds
       
     - name: print output of lldp nei only
-      debug:
+      ansible.builtin.debug:
         var: show_cmds.stdout_lines[1]
