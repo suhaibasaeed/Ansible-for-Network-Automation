@@ -25,5 +25,5 @@
       register: log_output
     
     - name: print output
-      debug:
+      ansible.builtin.debug:
         var: log_output
