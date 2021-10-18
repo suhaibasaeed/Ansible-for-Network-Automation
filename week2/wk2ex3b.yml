@@ -16,5 +16,5 @@
       register: show_cmds
       
     - name: print output of show_ver variable
-      debug:
+      ansible.builtin.debug:
         var: show_cmds
