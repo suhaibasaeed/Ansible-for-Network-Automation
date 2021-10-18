@@ -14,5 +14,5 @@
       register: show_ver
       
     - name: print output of show_ver variable
-      debug:
+      ansible.builtin.debug:
         var: show_ver
