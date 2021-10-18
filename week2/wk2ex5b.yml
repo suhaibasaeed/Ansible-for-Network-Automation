@@ -15,6 +15,6 @@
       register: interfaces
     
     - name: print fxp0.0 output
-      debug:
+      ansible.builtin.debug:
         var: interfaces.stdout_lines[0][21]
       # Put output of sh int terse fxp0.0 into intfs variable
