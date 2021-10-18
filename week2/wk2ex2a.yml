@@ -10,5 +10,5 @@
   tasks:
 
     - name: print asn
-      debug:
+      ansible.builtin.debug:
         var: bgp_asn
