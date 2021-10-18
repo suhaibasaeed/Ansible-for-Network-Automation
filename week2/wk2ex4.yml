@@ -20,7 +20,7 @@
           # String we're looking for from device
           prompt: confirm
           # Send yes back to device
-          answer: "y"
+          answer: "\r"
       # Put output into variable
       register: log_output
     
