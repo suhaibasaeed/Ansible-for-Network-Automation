@@ -19,7 +19,7 @@
       - name: Attempt configuration using invalid password
         vars:
           ansible_ssh_pass: "invalid"
-        eos_config:
+        arista.eos.eos_config:
           lines:
             - "ip name-server 8.8.8.8"
             - "ip name-server 4.2.2.2"
