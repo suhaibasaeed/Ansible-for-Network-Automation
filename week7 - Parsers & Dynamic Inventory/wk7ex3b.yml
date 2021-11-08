@@ -22,7 +22,7 @@
         var: sh_vlan
     
     - name: Use ntc_parse filter to get structured output
-      set_fact:
+      ansible.builtin.set_fact:
         show_vl: "{{sh_vlan.stdout[0] | ntc_parse(command, platform, textfsm_index)}}"
     
     - name: Print structured output
