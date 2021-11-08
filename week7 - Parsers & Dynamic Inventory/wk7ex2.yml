@@ -28,7 +28,7 @@
           vars:
           # Use environment variable to avoid hard-coded passwd
             ansible_ssh_pass: "{{lookup('env','ANSIBLE_PASSWORD')}}"
-          eos_config:
+          arista.eos.eos_config:
             lines:
               - "ip name-server 8.8.8.8"
               - "ip name-server 4.2.2.2"
